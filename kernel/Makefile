@@ -39,7 +39,19 @@ font.bin: font.txt
 font.obj: font.bin
 	$(BIN2OBJ) font.bin font.obj _font
 	
-	
+    
+################################################################
+#base.c base.h
+base.gas: base.c
+	$(CC1) -o base.gas base.c
+
+base.nas: base.gas 
+	$(GAS2NASK) base.gas base.nas
+
+base.obj: base.nas
+	$(NASK) base.nas base.obj base.lst
+    
+    
 ################################################################
 #dsctbl.c dsctbl.h
 dsctbl.gas: dsctbl.c
@@ -70,3 +82,5 @@ clear:
 	-$(DEL) *.gas
 	-$(DEL) dsctbl.nas
 	-$(DEL) int.nas
+	-$(DEL) base.nas
+    

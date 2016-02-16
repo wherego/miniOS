@@ -1,19 +1,22 @@
 #include <asm/io.h>
+#include <miniOS/base.h>
 #include <miniOS/window.h>
 #include <miniOS/dsctbl.h>
 #include <miniOS/int.h>
 #include "stdio.h"
 
-Key_buf key_buf;
+
+Circular_Queue key_queue;
 
 void HariMain(void)
 {
-	char str_buffer[12];
 	char mouse_cursor_buf[16][16];
 	boot_info_t *bootInfo = NULL;
 	int mouse_x,mouse_y;
 	int i;
-    char s[4];
+    char s[4],key_buf[32];
+    
+    
 	////////////////////////////////////////////////////////////
 	//
 	bootInfo = (boot_info_t *)BOOT_INFO_ADDR;					/* 获取启动信息						*/	
@@ -42,21 +45,25 @@ void HariMain(void)
 	io_out8(PIC0_IMR, 0xf9); /* PIC1とキーボードを許可(11111001) */
 	io_out8(PIC1_IMR, 0xef); /* マウスを許可(11101111) */
     
+    
+    
+    
+    /////////////////////////////////////////////////////////////////////////////
+    //其他代码在上面的初始化下面写
+    circular_queue_init(&key_queue, 32, key_buf);
+    
+    
     print_string(0, 0, COL8_FFFFFF, "Test the keybord interrupt:");
 
+    ////////////////////////////////////////////////////////////
 	for (;;) {
         io_cli();
-        if(key_buf.counter == 0){
+        if(is_empty(&key_queue) == 0){
             io_sti();
             HLT;
         }
         else{
-            i = key_buf.data[key_buf.pop_index++];
-            key_buf.counter--;
-            
-            if(key_buf.pop_index == 32){
-                key_buf.pop_index = 0;
-            }
+            circular_queue_pop(&key_queue,&i);
             
             io_sti();
             

@@ -18,6 +18,7 @@
 #include <asm/io.h>
 #include <miniOS/window.h>
 #include "stdio.h"
+#include <miniOS/base.h>
 
 void pic_init(void)
 {
@@ -48,7 +49,7 @@ void pic_init(void)
   * @param[in] esp
   * @return None
   */
-extern Key_buf key_buf;
+extern Circular_Queue key_queue;
 void inthandler21(int *esp)
 {
     uint8_t data;
@@ -56,14 +57,7 @@ void inthandler21(int *esp)
     data = io_in8(0x60);                    /* 接受中断数据                       */
     io_out8(PIC0_OCW2,0x61);                /* 清除int 0x21的中断标志             */
     
-    if(key_buf.push_index < 32){
-        key_buf.data[key_buf.push_index++] = data;
-        key_buf.counter++;
-        if(key_buf.push_index == 32){
-            key_buf.push_index = 0;
-        }
-    }
-
+    circular_queue_push(&key_queue,data);
     return;
 }
 
@@ -90,8 +84,6 @@ void inthandler2c(int *esp)
     draw_rectangle(COL8_000000, 0, 0, 32*8, 16);
     print_string(0, 0, COL8_FFFFFF, "INT 2c(IRQ-12):PS/2 mouse");
     
-    for(;;){
-        io_hlt();
-    }
+    return;
 }
 

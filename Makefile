@@ -45,9 +45,12 @@ kernel/io.obj:
 	
 kernel/asm.obj:
 	$(MAKE) asm.obj -C kernel
-	
+    
 kernel/font.obj:
 	$(MAKE) font.obj -C kernel
+    	
+kernel/base.obj:
+	$(MAKE) base.obj -C kernel
 	
 kernel/dsctbl.obj:
 	$(MAKE) dsctbl.obj -C kernel
@@ -65,11 +68,11 @@ window/mouse.obj:
 
 ################################################################
 init/main.bim: init/main.obj \
-		kernel/io.obj kernel/asm.obj kernel/font.obj kernel/dsctbl.obj kernel/int.obj\
+		kernel/io.obj kernel/asm.obj kernel/font.obj kernel/base.obj kernel/dsctbl.obj kernel/int.obj\
 		window/window.obj window/mouse.obj     
 	$(OBJ2BIM) @$(RULEFILE) out:init/main.bim stack:3136k map:init/main.map \
 		init/main.obj \
-		kernel/io.obj kernel/asm.obj kernel/font.obj kernel/dsctbl.obj kernel/int.obj \
+		kernel/io.obj kernel/asm.obj kernel/font.obj kernel/base.obj kernel/dsctbl.obj kernel/int.obj \
 		window/window.obj window/mouse.obj     
 # 3MB+64KB=3136KB
 
