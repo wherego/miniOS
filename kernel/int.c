@@ -1,6 +1,21 @@
+/**
+  *************************************************************************
+  *
+  *							int.c
+  *						2016-02-15	by zlq
+  *
+  *------------------------------------------------------------------------
+  * @brief 本文件包含了关于中断的相关函数
+  * 
+  * @attention
+  *     处理中断过程中注意要清理中断标志
+  *
+  *************************************************************************
+  */
 #include <miniOS/int.h>
 #include <asm/io.h>
 #include <miniOS/window.h>
+#include "stdio.h"
 
 void pic_init(void)
 {
@@ -25,23 +40,51 @@ void pic_init(void)
 	return;
 }
 
+/**
+  * @brief  键盘IRQ1中断，int 0x21
+  *
+  * @param[in] esp
+  * @return None
+  */
 void inthandler21(int *esp)
 {
-    draw_rectangle(COL8_000000, 0, 0, 32*8, 16);
-    print_string(0, 0, COL8_FFFFFF, "INT 21(IRQ-1):PS/2 keyboard");
+    uint8_t data,s[4];
     
-    for(;;){
-        io_hlt();
-    }
+    io_out8(PIC0_OCW2,0x61);                /* 清除int 0x21的中断标志             */
+    data = io_in8(0x60);
+    
+    sprintf(s,"%02x", data);
+    draw_rectangle(COL8_008484, 0, 16, 16, 16);
+    print_string(0, 16, COL8_FFFFFF, s);
+    
+    return;
 }
 
+/**
+  * @brief  int 0x27
+  *
+  * @param[in] esp
+  * @return None
+  */
+void inthandler27(int *esp)
+{
+	io_out8(PIC0_OCW2, 0x67); 
+	return;
+}
 
+/**
+  * @brief  鼠标IRQ12中断,int 0x2c
+  *
+  * @param[in] esp
+  * @return None
+  */
 void inthandler2c(int *esp)
 {
-    draw_rectangle(COL8_000000, 0, 0, 32*8-1, 15);
-    print_string(0, 0, COL8_FFFFFF, "INT 21(IRQ-1):PS/2 keyboard");
+    draw_rectangle(COL8_000000, 0, 0, 32*8, 16);
+    print_string(0, 0, COL8_FFFFFF, "INT 2c(IRQ-12):PS/2 mouse");
     
     for(;;){
         io_hlt();
     }
 }
+

@@ -17,11 +17,16 @@
 
 void pic_init(void);
 void inthandler21(int *esp);
+void inthandler27(int *esp);
 void inthandler2c(int *esp);
+
+
 
 //kernel.nas
 void asm_inthandler21(void);
+void asm_inthandler27(void);
 void asm_inthandler2c(void);
+
 
 #endif //!__INT_H
 

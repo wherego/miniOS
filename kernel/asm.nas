@@ -10,9 +10,9 @@
 [BITS 32]							; 制作32位模式用的机械语言
 [FILE "io.nas"]					    ; 源文件名信息
 
-		global _asm_inthandler21,_asm_inthandler2c
+		global _asm_inthandler21,_asm_inthandler2c,_asm_inthandler27
         
-        extern _inthandler21,_inthandler2c
+        extern _inthandler21,_inthandler2c,_inthandler27
 
 ; 以下是实际的函数
 [SECTION .text]						; 目标文件中写了这些之后再写程序
@@ -50,3 +50,18 @@ _asm_inthandler2c:
         pop es
         iretd
         
+_asm_inthandler27:
+        push es
+        push ds
+        pushad
+        mov eax,esp
+        push eax
+        mov ax,ss
+        mov ds,ax
+        mov es,ax
+        call _inthandler27
+        pop eax
+        popad
+        pop ds
+        pop es
+        iretd
