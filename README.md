@@ -46,7 +46,9 @@
     |   |-- window.c
     |   `-- Makefile
     |-- z_tools
-    `-- Makefile
+    |-- Makefile
+    |-- GPL
+    `-- LGPL
 
 #下载和使用
 目前miniOS的的开发平台是windows平台，没有使用集成开发环境，大部分开发工具来源于《30自制操作系统》，均改自一些开源软件，可以根据需求和开源协议使用，另外自己只需要提供一个代码编辑器即可，（如果没有合适的，推荐notepad++、visual studio code）。<br>
