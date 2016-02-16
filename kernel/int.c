@@ -8,7 +8,9 @@
   * @brief 本文件包含了关于中断的相关函数
   * 
   * @attention
-  *     处理中断过程中注意要清理中断标志
+  *     1、处理中断过程中注意要清理中断标志；
+  *     2、字符显示需要占用比较多的时间，所以可以制作一个缓冲区，存放键盘数据，
+  *        然后让操作系统主动检查这个缓冲区，加快中断处理的速度。
   *
   *************************************************************************
   */
@@ -46,17 +48,22 @@ void pic_init(void)
   * @param[in] esp
   * @return None
   */
+extern Key_buf key_buf;
 void inthandler21(int *esp)
 {
-    uint8_t data,s[4];
+    uint8_t data;
     
+    data = io_in8(0x60);                    /* 接受中断数据                       */
     io_out8(PIC0_OCW2,0x61);                /* 清除int 0x21的中断标志             */
-    data = io_in8(0x60);
     
-    sprintf(s,"%02x", data);
-    draw_rectangle(COL8_008484, 0, 16, 16, 16);
-    print_string(0, 16, COL8_FFFFFF, s);
-    
+    if(key_buf.push_index < 32){
+        key_buf.data[key_buf.push_index++] = data;
+        key_buf.counter++;
+        if(key_buf.push_index == 32){
+            key_buf.push_index = 0;
+        }
+    }
+
     return;
 }
 

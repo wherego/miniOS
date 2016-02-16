@@ -1,6 +1,7 @@
 #ifndef __INT_H
 #define __INT_H
 
+#include "stdint.h"
 
 #define PIC0_ICW1		0x0020
 #define PIC0_OCW2		0x0020
@@ -14,6 +15,18 @@
 #define PIC1_ICW2		0x00a1
 #define PIC1_ICW3		0x00a1
 #define PIC1_ICW4		0x00a1
+
+/**
+  * 制作FIFO键盘数据缓冲区
+  * @{
+  */
+typedef struct{
+    uint8_t data[32];
+    int counter,pop_index,push_index;
+}Key_buf;
+/**
+  * @}
+  */
 
 void pic_init(void);
 void inthandler21(int *esp);

@@ -4,6 +4,7 @@
 #include <miniOS/int.h>
 #include "stdio.h"
 
+Key_buf key_buf;
 
 void HariMain(void)
 {
@@ -11,7 +12,8 @@ void HariMain(void)
 	char mouse_cursor_buf[16][16];
 	boot_info_t *bootInfo = NULL;
 	int mouse_x,mouse_y;
-	
+	int i;
+    char s[4];
 	////////////////////////////////////////////////////////////
 	//
 	bootInfo = (boot_info_t *)BOOT_INFO_ADDR;					/* 获取启动信息						*/	
@@ -43,7 +45,27 @@ void HariMain(void)
     print_string(0, 0, COL8_FFFFFF, "Test the keybord interrupt:");
 
 	for (;;) {
-		HLT;
+        io_cli();
+        if(key_buf.counter == 0){
+            io_sti();
+            HLT;
+        }
+        else{
+            i = key_buf.data[key_buf.pop_index++];
+            key_buf.counter--;
+            
+            if(key_buf.pop_index == 32){
+                key_buf.pop_index = 0;
+            }
+            
+            io_sti();
+            
+            sprintf(s,"%02x", i);
+            draw_rectangle(COL8_008484, 0, 16, 16, 16);
+            print_string(0, 16, COL8_FFFFFF, s);
+            
+        }
+		
 	}
 }
 
