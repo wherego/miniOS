@@ -1,26 +1,47 @@
 #include <miniOS/int.h>
-#include <asm/sys_io.h>
+#include <asm/io.h>
+#include <miniOS/window.h>
 
 void pic_init(void)
 {
 	//IMR:interrupt mask register
-	io_out8(PIC0_IMR, 0xff);				/* ÖĞ¶ÏÆÁ±Î¼Ä´æÆ÷£¬½ûÖ¹ËùÓĞÖĞ¶Ï		*/
-	io_out8(PIC1_IMR, 0xff);				/* ÖĞ¶ÏÆÁ±Î¼Ä´æÆ÷£¬½ûÖ¹ËùÓĞÖĞ¶Ï		*/
+	io_out8(PIC0_IMR, 0xff);				/* ä¸­æ–­å±è”½å¯„å­˜å™¨ï¼Œç¦æ­¢æ‰€æœ‰ä¸­æ–­		*/
+	io_out8(PIC1_IMR, 0xff);				/* ä¸­æ–­å±è”½å¯„å­˜å™¨ï¼Œç¦æ­¢æ‰€æœ‰ä¸­æ–­		*/
 
 	//ICW:initial control word
-	io_out8(PIC0_ICW1, 0x11);				/* ±ßÑØ´¥·¢Ä£Ê½						*/
-	io_out8(PIC0_ICW2, 0x20);				/* IRQ0-7ÓÉINT20-27½ÓÊÕ				*/
-	io_out8(PIC0_ICW3, 1 << 2);				/* PIC1ÓÉIRQ2Á´½Ó					*/
-	io_out8(PIC0_ICW4, 0x01);				/* ÎŞ»º³åÇøÄ£Ê½						*/
+	io_out8(PIC0_ICW1, 0x11);				/* è¾¹æ²¿è§¦å‘æ¨¡å¼						*/
+	io_out8(PIC0_ICW2, 0x20);				/* IRQ0-7ç”±INT20-27æ¥æ”¶				*/
+	io_out8(PIC0_ICW3, 1 << 2);				/* PIC1ç”±IRQ2é“¾æ¥					*/
+	io_out8(PIC0_ICW4, 0x01);				/* æ— ç¼“å†²åŒºæ¨¡å¼						*/
 
-	io_out8(PIC1_ICW1, 0x11);				/* ±ßÑØ´¥·¢Ä£Ê½						*/
-	io_out8(PIC1_ICW2, 0x28);				/* IRQ8-15ÓÉINT28-2f½ÓÊÕ				*/
-	io_out8(PIC1_ICW3, 2);					/* PIC1ÓÉIRQ2Á´½Ó					*/
-	io_out8(PIC1_ICW4, 0x01);				/* ÎŞ»º³åÇøÄ£Ê½						*/
+	io_out8(PIC1_ICW1, 0x11);				/* è¾¹æ²¿è§¦å‘æ¨¡å¼						*/
+	io_out8(PIC1_ICW2, 0x28);				/* IRQ8-15ç”±INT28-2fæ¥æ”¶				*/
+	io_out8(PIC1_ICW3, 2);					/* PIC1ç”±IRQ2é“¾æ¥					*/
+	io_out8(PIC1_ICW4, 0x01);				/* æ— ç¼“å†²åŒºæ¨¡å¼						*/
 
-	io_out8(PIC0_IMR, 0xfb);				/* 11111011 PIC1ÒÔÍâÈ«²¿½ûÖ¹			*/
-	io_out8(PIC1_IMR, 0xff);				/* 11111111 ½ûÖ¹ËùÓĞÖĞ¶Ï				*/
+	io_out8(PIC0_IMR, 0xfb);				/* 11111011 PIC1ä»¥å¤–å…¨éƒ¨ç¦æ­¢			*/
+	io_out8(PIC1_IMR, 0xff);				/* 11111111 ç¦æ­¢æ‰€æœ‰ä¸­æ–­				*/
 
 	return;
 }
 
+void inthandler21(int *esp)
+{
+    draw_rectangle(COL8_000000, 0, 0, 32*8, 16);
+    print_string(0, 0, COL8_FFFFFF, "INT 21(IRQ-1):PS/2 keyboard");
+    
+    for(;;){
+        io_hlt();
+    }
+}
+
+
+void inthandler2c(int *esp)
+{
+    draw_rectangle(COL8_000000, 0, 0, 32*8-1, 15);
+    print_string(0, 0, COL8_FFFFFF, "INT 21(IRQ-1):PS/2 keyboard");
+    
+    for(;;){
+        io_hlt();
+    }
+}

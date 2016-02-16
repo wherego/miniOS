@@ -5,18 +5,18 @@
   *						2016-02-03	by zlq
   *
   *------------------------------------------------------------------------
-  * @brief ±¾ÎÄ¼ş°üº¬ÁË¹ØÓÚGUIµÄÏà¹Øº¯Êı
+  * @brief æœ¬æ–‡ä»¶åŒ…å«äº†å…³äºGUIçš„ç›¸å…³å‡½æ•°
   *
   *************************************************************************
   */
 #include <miniOS/window.h>
-#include <asm/sys_io.h>
+#include <asm/io.h>
 
 
-extern char font[4096];											/* ×ÖÌå£¬ºº×Ö					*/
+extern char font[4096];											/* å­—ä½“ï¼Œæ±‰å­—					*/
 
 /**
-  * @brief  ³õÊ¼»¯µ÷É«°å
+  * @brief  åˆå§‹åŒ–è°ƒè‰²æ¿
   *
   * @param  None
   * @return None
@@ -24,22 +24,22 @@ extern char font[4096];											/* ×ÖÌå£¬ºº×Ö					*/
 void palette_init(void)
 {
 	static uint8_t table_rgb[16 * 3] = {
-		0x00, 0x00, 0x00,						/*  0: ºÚ		 */
-		0xff, 0x00, 0x00,						/*  1:ÁÁºì		 */
-		0x00, 0xff, 0x00,						/*  2:ÁÁÂÌ		 */
-		0xff, 0xff, 0x00,						/*  3:ÁÁ»Æ		 */
-		0x00, 0x00, 0xff,						/*  4:ÁÁÀ¶		 */
-		0xff, 0x00, 0xff,						/*  5:ÁÁ×Ï		 */
-		0x00, 0xff, 0xff,						/*  6:Ç³ÁÁÀ¶		 */
-		0xff, 0xff, 0xff,						/*  7:°×			 */
-		0xc6, 0xc6, 0xc6,						/*  8:ÁÁ»Ò		 */
-		0x84, 0x00, 0x00,						/*  9:°µºì		 */
-		0x00, 0x84, 0x00,						/* 10:°µÂÌ		 */
-		0x84, 0x84, 0x00,						/* 11:°µ»Æ		 */
-		0x00, 0x00, 0x84,						/* 12:°µÇà		 */
-		0x84, 0x00, 0x84,						/* 13:°µ×Ï		 */
-		0x00, 0x84, 0x84,						/* 14:Ç®°µÀ¶		 */
-		0x84, 0x84, 0x84						/* 15:°µ»Ò		 */
+		0x00, 0x00, 0x00,						/*  0: é»‘		 */
+		0xff, 0x00, 0x00,						/*  1:äº®çº¢		 */
+		0x00, 0xff, 0x00,						/*  2:äº®ç»¿		 */
+		0xff, 0xff, 0x00,						/*  3:äº®é»„		 */
+		0x00, 0x00, 0xff,						/*  4:äº®è“		 */
+		0xff, 0x00, 0xff,						/*  5:äº®ç´«		 */
+		0x00, 0xff, 0xff,						/*  6:æµ…äº®è“		 */
+		0xff, 0xff, 0xff,						/*  7:ç™½			 */
+		0xc6, 0xc6, 0xc6,						/*  8:äº®ç°		 */
+		0x84, 0x00, 0x00,						/*  9:æš—çº¢		 */
+		0x00, 0x84, 0x00,						/* 10:æš—ç»¿		 */
+		0x84, 0x84, 0x00,						/* 11:æš—é»„		 */
+		0x00, 0x00, 0x84,						/* 12:æš—é’		 */
+		0x84, 0x00, 0x84,						/* 13:æš—ç´«		 */
+		0x00, 0x84, 0x84,						/* 14:é’±æš—è“		 */
+		0x84, 0x84, 0x84						/* 15:æš—ç°		 */
 	};
 	set_palette(0, 15, table_rgb);
 	return;
@@ -47,20 +47,20 @@ void palette_init(void)
 
 
 /**
-  * @brief  ÉèÖÃµ÷É«°å
+  * @brief  è®¾ç½®è°ƒè‰²æ¿
   *
   * @param[in] begin
   * @param[in] end
-  * @param[in] rgb£¬Ğ´Èëµ÷É«°åµÄÊı¾İ
+  * @param[in] rgbï¼Œå†™å…¥è°ƒè‰²æ¿çš„æ•°æ®
   * @return None
   */
 void set_palette(int begin, int end, uint8_t *rgb)
 {
 	int i, eflags;
-	eflags = io_load_eflags();					/* ¼ÇÂ¼ÖĞ¶ÏĞí¿É±êÖ¾µÄÖµ			 */
-	io_cli(); 									/* ½ûÖ¹ÖĞ¶Ï						 */
+	eflags = io_load_eflags();					/* è®°å½•ä¸­æ–­è®¸å¯æ ‡å¿—çš„å€¼			 */
+	io_cli(); 									/* ç¦æ­¢ä¸­æ–­						 */
 
-	//ÉèÖÃµ÷É«°å£¬¾ßÌå²½Öè
+	//è®¾ç½®è°ƒè‰²æ¿ï¼Œå…·ä½“æ­¥éª¤
 	io_out8(0x03c8, begin);
 	for (i = begin; i <= end; i++) {
 		io_out8(0x03c9, rgb[0] / 4);
@@ -69,19 +69,19 @@ void set_palette(int begin, int end, uint8_t *rgb)
 		rgb += 3;
 	}
 
-	io_store_eflags(eflags);					/* »Ö¸´ÖĞ¶ÏĞí¿É±êÖ¾µÄÖµ			 */
+	io_store_eflags(eflags);					/* æ¢å¤ä¸­æ–­è®¸å¯æ ‡å¿—çš„å€¼			 */
 	return;
 }
 
 
 /**
-  * @brief  »æÖÆ¾ØĞÎ
+  * @brief  ç»˜åˆ¶çŸ©å½¢
   *
-  * @param[in] color£¬¾ØĞÎµÄÑÕÉ«
-  * @param[in] begin_x£¬¿ªÊ¼µÄx×ø±ê
-  * @param[in] begin_y£¬¿ªÊ¼µÄy×ø±ê
-  * @param[in] length_x£¬xÖáµÄ³¤¶È
-  * @param[in] length_y£¬yÖáµÄ³¤¶È
+  * @param[in] colorï¼ŒçŸ©å½¢çš„é¢œè‰²
+  * @param[in] begin_xï¼Œå¼€å§‹çš„xåæ ‡
+  * @param[in] begin_yï¼Œå¼€å§‹çš„yåæ ‡
+  * @param[in] length_xï¼Œxè½´çš„é•¿åº¦
+  * @param[in] length_yï¼Œyè½´çš„é•¿åº¦
   *
   * @return None
   */
@@ -97,7 +97,7 @@ void draw_rectangle(uint8_t color, int begin_x, int begin_y, int length_x, int l
 	return;
 }
 /**
-  * @brief  ×ÀÃæ³õÊ¼»¯
+  * @brief  æ¡Œé¢åˆå§‹åŒ–
   *
   * @param  None
   * @return None
@@ -114,11 +114,11 @@ void desktop_init(void)
 
 
 /**
-  * @brief  ´òÓ¡×Ö·û
+  * @brief  æ‰“å°å­—ç¬¦
   *
-  * @param[in] (x,y)¿ªÊ¼×ø±ê
-  * @param[in] color£¬×Ö·ûÑÕÉ«
-  * @param[in] chr£¬×Ö·û±àÂë
+  * @param[in] (x,y)å¼€å§‹åæ ‡
+  * @param[in] colorï¼Œå­—ç¬¦é¢œè‰²
+  * @param[in] chrï¼Œå­—ç¬¦ç¼–ç 
   * @return None
   */
 void print_char(int x, int y, uint8_t color, int8_t chr)
@@ -143,11 +143,11 @@ void print_char(int x, int y, uint8_t color, int8_t chr)
 }
 
 /**
-  * @brief  Êä³ö×Ö·û´®
+  * @brief  è¾“å‡ºå­—ç¬¦ä¸²
   *
-  * @param[in] (x,y)£¬×Ö·û´®ÏÔÊ¾×ø±ê
-  * @param[in] color£¬×Ö·û´®ÑÕÉ«
-  * @param[in] str£¬Ö¸Ïò×Ö·û´®µÄÖ¸Õë
+  * @param[in] (x,y)ï¼Œå­—ç¬¦ä¸²æ˜¾ç¤ºåæ ‡
+  * @param[in] colorï¼Œå­—ç¬¦ä¸²é¢œè‰²
+  * @param[in] strï¼ŒæŒ‡å‘å­—ç¬¦ä¸²çš„æŒ‡é’ˆ
   * @return None
   */
 void print_string(int x, int y, uint8_t color, int8_t *str)

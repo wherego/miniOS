@@ -4,34 +4,34 @@
 #include "stdint.h"
 
 
-/* ºê¶¨Òå------------------------------------------------*/
+/* å®å®šä¹‰------------------------------------------------*/
 #define VRAM_ADDR		((char *)0xa0000)
-#define BOOT_INFO_ADDR	((char *)0x0ff0)				/* Æô¶¯ĞÅÏ¢£¬±£´æÓĞÏÔÊ¾µÄĞÅÏ¢		*/
+#define BOOT_INFO_ADDR	((char *)0x0ff0)				/* å¯åŠ¨ä¿¡æ¯ï¼Œä¿å­˜æœ‰æ˜¾ç¤ºçš„ä¿¡æ¯		*/
 #define SCRNX			(*((short *)0x0ff4))
 #define SCRNY			(*((short *)0x0ff6))
 
-#define COL8_000000		0								/*  0: ºÚ			*/
-#define COL8_FF0000		1								/*  1:ÁÁºì		 	*/
-#define COL8_00FF00		2								/*  2:ÁÁÂÌ		 	*/
-#define COL8_FFFF00		3								/*  3:ÁÁ»Æ		 	*/
-#define COL8_0000FF		4								/*  4:ÁÁÀ¶		 	*/
-#define COL8_FF00FF		5								/*  5:ÁÁ×Ï		 	*/
-#define COL8_00FFFF		6								/*  6:Ç³ÁÁÀ¶			*/
-#define COL8_FFFFFF		7								/*  7:°×				*/
-#define COL8_C6C6C6		8								/*  8:ÁÁ»Ò		 	*/
-#define COL8_840000		9								/*  9:°µºì			*/
-#define COL8_008400		10								/* 10:°µÂÌ		 	*/
-#define COL8_848400		11								/* 11:°µ»Æ		 	*/
-#define COL8_000084		12								/* 12:°µÇà		 	*/
-#define COL8_840084		13								/* 13:°µ×Ï		 	*/
-#define COL8_008484		14								/* 14:Ç®°µÀ¶	 		*/
-#define COL8_848484		15								/* 15:°µ»Ò		 	*/
+#define COL8_000000		0								/*  0: é»‘			*/
+#define COL8_FF0000		1								/*  1:äº®çº¢		 	*/
+#define COL8_00FF00		2								/*  2:äº®ç»¿		 	*/
+#define COL8_FFFF00		3								/*  3:äº®é»„		 	*/
+#define COL8_0000FF		4								/*  4:äº®è“		 	*/
+#define COL8_FF00FF		5								/*  5:äº®ç´«		 	*/
+#define COL8_00FFFF		6								/*  6:æµ…äº®è“			*/
+#define COL8_FFFFFF		7								/*  7:ç™½				*/
+#define COL8_C6C6C6		8								/*  8:äº®ç°		 	*/
+#define COL8_840000		9								/*  9:æš—çº¢			*/
+#define COL8_008400		10								/* 10:æš—ç»¿		 	*/
+#define COL8_848400		11								/* 11:æš—é»„		 	*/
+#define COL8_000084		12								/* 12:æš—é’		 	*/
+#define COL8_840084		13								/* 13:æš—ç´«		 	*/
+#define COL8_008484		14								/* 14:é’±æš—è“	 		*/
+#define COL8_848484		15								/* 15:æš—ç°		 	*/
 
 
 
 
 /**
-  * ±£´æÆô¶¯ĞÅÏ¢µÄ½á¹¹ÌåÀàĞÍ
+  * ä¿å­˜å¯åŠ¨ä¿¡æ¯çš„ç»“æ„ä½“ç±»å‹
   */
 typedef struct{
 	char cyls,leds,vmode,reserve;
@@ -40,17 +40,17 @@ typedef struct{
 }boot_info_t;
 
 
-/* º¯ÊıÉùÃ÷-----------------------------------------------*/
+/* å‡½æ•°å£°æ˜-----------------------------------------------*/
 void palette_init(void);
 void set_palette(int begin, int end, uint8_t *rgb);
 void draw_rectangle(uint8_t color, int begin_x, int begin_y, int length_x, int length_y);
 void desktop_init(void);
 
-//Êä³ö×Ö·ûºÍ×Ö·û´®
+//è¾“å‡ºå­—ç¬¦å’Œå­—ç¬¦ä¸²
 void print_char(int x, int y, uint8_t color, int8_t chr);
 void print_string(int x, int y, uint8_t color, int8_t *str);
 
-//Êó±ê
+//é¼ æ ‡
 void mouse_cursor_init(char *mouse_buffer, char background_color);
 
 

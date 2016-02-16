@@ -5,11 +5,12 @@
   *						2016-02-11	by zlq
   *
   *------------------------------------------------------------------------
-  * @brief ±¾ÎÄ¼ş°üº¬ÁË¹ØÓÚGDTºÍIDTµÄÏà¹Øº¯Êı
+  * @brief æœ¬æ–‡ä»¶åŒ…å«äº†å…³äºGDTå’ŒIDTçš„ç›¸å…³å‡½æ•°
   *
   *************************************************************************
   */
 #include <miniOS/dsctbl.h>
+#include <miniOS/int.h>
 
 void gdtidt_init(void)
 {
@@ -17,7 +18,7 @@ void gdtidt_init(void)
 	gate_descriptor *idt = (gate_descriptor *)ADR_IDT;
 	int i;
 
-	//GDTµÄ³õÊ¼»¯
+	//GDTçš„åˆå§‹åŒ–
 	for (i = 0; i < 8192; i++) {
 		set_segdesc(gdt + i, 0, 0, 0);
 	}
@@ -25,10 +26,12 @@ void gdtidt_init(void)
 	set_segdesc(gdt + 2, 0x0007ffff, 0x00280000, 0x409a);
 	load_gdtr(0xffff, 0x00270000);
 
-	//IDTµÄ³õÊ¼»¯
+	//IDTçš„åˆå§‹åŒ–
 	for (i = 0; i < 256; i++) {
 		set_gatedesc(idt + i, 0, 0, 0);
 	}
+    set_gatedesc(idt + 0x21,(int) asm_inthandler21, 2<<3, AR_INTGATE32);
+    set_gatedesc(idt + 0x2c, (int) asm_inthandler2c, 2<<3, AR_INTGATE32);
 	load_idtr(0x7ff, 0x0026f800);
 
 	return;
@@ -42,10 +45,10 @@ void set_segdesc(segment_descriptor *sd, uint32_t limit, int base, int ar)
 		limit /= 0x1000;
 	}
 
-	sd->limit_low = limit & 0xffff;				/* »ñÈ¡limitµÍ16Î»£¨2¸ö×Ö½Ú£©		*/
-	sd->base_low = base & 0xffff;				/* »ñÈ¡baseµÍ16Î»ÄÚÈİ			*/
-	sd->base_mid = (base >> 16) & 0xff;			/* »ñÈ¡baseÖĞ8Î»µÄÄÚÈİ			*/
-	sd->access_right = ar & 0xff;				/* access rightµÍ8Î»				*/
+	sd->limit_low = limit & 0xffff;				/* è·å–limitä½16ä½ï¼ˆ2ä¸ªå­—èŠ‚ï¼‰		*/
+	sd->base_low = base & 0xffff;				/* è·å–baseä½16ä½å†…å®¹			*/
+	sd->base_mid = (base >> 16) & 0xff;			/* è·å–baseä¸­8ä½çš„å†…å®¹			*/
+	sd->access_right = ar & 0xff;				/* access rightä½8ä½				*/
 	sd->limit_high = ((limit >> 16) & 0x0f) | ((ar >> 8) & 0xf0);
 	sd->base_high = (base >> 24) & 0xff;
 

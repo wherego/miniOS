@@ -40,12 +40,15 @@ init/main.obj: init/main.nas
 
 #################################################################
 #kernel
-kernel/sys_io.obj:
-	$(MAKE) sys_io.obj -C kernel
+kernel/io.obj:
+	$(MAKE) io.obj -C kernel
+	
+kernel/asm.obj:
+	$(MAKE) asm.obj -C kernel
 	
 kernel/font.obj:
 	$(MAKE) font.obj -C kernel
-
+	
 kernel/dsctbl.obj:
 	$(MAKE) dsctbl.obj -C kernel
 	
@@ -62,11 +65,11 @@ window/mouse.obj:
 
 ################################################################
 init/main.bim: init/main.obj \
-		kernel/sys_io.obj kernel/font.obj kernel/dsctbl.obj kernel/int.obj \
+		kernel/io.obj kernel/asm.obj kernel/font.obj kernel/dsctbl.obj kernel/int.obj\
 		window/window.obj window/mouse.obj     
 	$(OBJ2BIM) @$(RULEFILE) out:init/main.bim stack:3136k map:init/main.map \
 		init/main.obj \
-		kernel/sys_io.obj kernel/font.obj kernel/dsctbl.obj kernel/int.obj \
+		kernel/io.obj kernel/asm.obj kernel/font.obj kernel/dsctbl.obj kernel/int.obj \
 		window/window.obj window/mouse.obj     
 # 3MB+64KB=3136KB
 

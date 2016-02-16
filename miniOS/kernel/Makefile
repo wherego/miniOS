@@ -20,23 +20,16 @@ COPY		= copy
 DEL			= del
 
 
-LD = $(TOOLPATH)ld.exe
-
-OBJS = sys_io.obj font.obj dsctbl.obj int.obj
-
-
-default:
-	$(MAKE) sys_io.obj		
-	$(MAKE) font.obj
-	$(MAKE) dsctbl.obj
-	$(MAKE) int.obj
 
 ################################################################
-#sys_io.nas	
-sys_io.obj: sys_io.nas
-	$(NASK) sys_io.nas sys_io.obj sys_io.lst
+#io.nas	
+io.obj: io.nas
+	$(NASK) io.nas io.obj io.lst
 	
-	
+################################################################
+#kernel.nas	
+asm.obj: asm.nas
+	$(NASK) asm.nas asm.obj asm.lst	
 	
 ################################################################
 #font.txt

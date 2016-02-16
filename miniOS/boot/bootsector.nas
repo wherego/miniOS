@@ -173,7 +173,7 @@ msgl:
 		db 0
 
 errmsg:
-		db 0x0a,0x0a
+		dw 0x0a0a
 		db "load error"
 		db 0x0a
 		db 0
@@ -181,4 +181,4 @@ errmsg:
 		
 		resb 0x7dfe-$
 		
-		db 0x55,0xaa
+		dw 0xaa55
