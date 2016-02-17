@@ -10,6 +10,7 @@
 
 boot/*.bin
 kernel/*.bin
+miniOS.img
 
 #以下文件需要上传
 !bootsector.nas
