@@ -11,4 +11,3 @@ z_tools/qemu/fdimage0.bin
 #希望这些后缀的文件上传
 !*.exe
 !*.lib
-z_tools/qemu/fdimage0.bin
