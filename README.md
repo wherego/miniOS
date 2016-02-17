@@ -24,6 +24,7 @@
     |   |   |-- base.h
     |   |   |-- dsctbl.h
     |   |   |-- int.h
+    |   |   |-- keyboard.h
     |   |   `-- window.h
     |   |-- sys
     |   |-- miniOS.rul
@@ -36,6 +37,7 @@
     |   |-- io.nas
     |   |-- asm.nas
     |   |-- font.txt
+    |   |-- keyboard.c
     |   |-- base.c
     |   |-- int.c
     |   |-- dsctbl.c
