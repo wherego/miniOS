@@ -96,6 +96,18 @@ void draw_rectangle(uint8_t color, int begin_x, int begin_y, int length_x, int l
 	}
 	return;
 }
+
+void draw_block(int begin_x, int begin_y, int length_x, int length_y, char *buf)
+{
+    int x, y;
+
+	for (y = 0; y < length_y; y++) {
+		for (x = 0; x < length_x; x++) {
+			VRAM_ADDR[(y + begin_y)*SCRNX + (x + begin_x)] = buf[y*16 + x];
+		}
+	}
+	return;
+}
 /**
   * @brief  桌面初始化
   *
@@ -158,4 +170,6 @@ void print_string(int x, int y, uint8_t color, int8_t *str)
 	}
 	return;
 }
+
+
 

@@ -14,7 +14,7 @@
 void circular_queue_init(Circular_Queue *queue, int size, uint8_t *buf)
 {
     queue->size = size;
-    queue->free_size = 0;
+    queue->free_size = size;
     queue->pop_index = 0;
     queue->push_index = 0;
     queue->flags = 0;

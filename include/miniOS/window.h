@@ -39,20 +39,31 @@ typedef struct{
 	char *vram;
 }boot_info_t;
 
+/**
+  * 描述鼠标的结构体
+  */
+typedef struct{
+    uint8_t data[3],phase;
+    int x,y,btn;
+}Mouse_dsc;
+
 
 /* 函数声明-----------------------------------------------*/
 void palette_init(void);
 void set_palette(int begin, int end, uint8_t *rgb);
 void draw_rectangle(uint8_t color, int begin_x, int begin_y, int length_x, int length_y);
+void draw_block(int begin_x, int begin_y, int length_x, int length_y, char *buf);
 void desktop_init(void);
 
 //输出字符和字符串
 void print_char(int x, int y, uint8_t color, int8_t chr);
 void print_string(int x, int y, uint8_t color, int8_t *str);
 
+////////////////////////////////////////////////////////
 //鼠标
+void mouse_enable(Mouse_dsc *mouse);
 void mouse_cursor_init(char *mouse_buffer, char background_color);
-
+uint8_t mouse_decode(Mouse_dsc *mouse, uint8_t data);
 
 #endif // !__WINDOW_H
 

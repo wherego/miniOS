@@ -79,11 +79,16 @@ void inthandler27(int *esp)
   * @param[in] esp
   * @return None
   */
+extern Circular_Queue mouse_queue;
 void inthandler2c(int *esp)
 {
-    draw_rectangle(COL8_000000, 0, 0, 32*8, 16);
-    print_string(0, 0, COL8_FFFFFF, "INT 2c(IRQ-12):PS/2 mouse");
+    uint8_t data;
     
+    io_out8(PIC1_OCW2,0x64);
+    io_out8(PIC0_OCW2,0x62);
+    data = io_in8(0x60);
+    
+    circular_queue_push(&mouse_queue,data);
     return;
 }
 

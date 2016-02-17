@@ -39,6 +39,17 @@ font.bin: font.txt
 font.obj: font.bin
 	$(BIN2OBJ) font.bin font.obj _font
 	
+
+################################################################
+#keyboard.c keyboard.h
+keyboard.gas: keyboard.c
+	$(CC1) -o keyboard.gas keyboard.c
+
+keyboard.nas: keyboard.gas 
+	$(GAS2NASK) keyboard.gas keyboard.nas
+
+keyboard.obj: keyboard.nas
+	$(NASK) keyboard.nas keyboard.obj keyboard.lst
     
 ################################################################
 #base.c base.h
@@ -83,4 +94,5 @@ clear:
 	-$(DEL) dsctbl.nas
 	-$(DEL) int.nas
 	-$(DEL) base.nas
+	-$(DEL) keyboard.nas
     
