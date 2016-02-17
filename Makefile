@@ -103,6 +103,8 @@ run:
 	
 clear:
 	$(DEL) miniOS.sys
+	$(DEL) miniOS.img
+	$(DEL) z_tools\qemu\fdimage0.bin
 	$(DEL) boot\*.lst
 	$(DEL) boot\*.bin
 	$(DEL) init\main.bim

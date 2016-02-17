@@ -4,9 +4,18 @@
 *.map
 *.gas
 *.hrb
+*.nas
+*.sys
+*.bim
 
-#以下单独的文件不需要上传
-z_tools/qemu/fdimage0.bin
+boot/*.bin
+kernel/*.bin
+
+#以下文件需要上传
+!bootsector.nas
+!head.nas
+!io.nas
+!asm.nas
 
 #希望这些后缀的文件上传
 !*.exe
