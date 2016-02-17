@@ -21,6 +21,7 @@
     |   |-- asm
     |   |   `-- io.h
     |   |-- miniOS
+    |   |   |-- base.h
     |   |   |-- dsctbl.h
     |   |   |-- int.h
     |   |   `-- window.h
