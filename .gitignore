@@ -21,3 +21,4 @@ miniOS.img
 #希望这些后缀的文件上传
 !*.exe
 !*.lib
+!*.dll
