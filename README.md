@@ -35,6 +35,7 @@
     |   |-- io.nas
     |   |-- asm.nas
     |   |-- font.txt
+    |   |-- base.c
     |   |-- int.c
     |   |-- dsctbl.c
     |   `-- Makefile
@@ -57,7 +58,7 @@
 * `'make'`，编译操作系统源代码并生成镜像文件`miniOS.img`，镜像文件放在`miniOS`文件夹的根目录下，
 可以使用`USBWriter.exe`软件(在`/z_tools/`目录下,将`USBWriter.7z`解压可得)将镜像写入U盘，并在实体机上运行。<br>
 * `'make run'`，编译生成镜像文件，并且在'qemu.exe'虚拟机上运行，该软件在`/z_tools/qemu/`目录下。
-* `'make clear'`,清理编译连接过程中的中间文件，但会保留最终生成的镜像文件。
+* `'make clear'`,清理编译连接过程中的中间文件，最终生成的镜像文件也会删除。
  
 
 #更新日志
