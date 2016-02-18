@@ -19,7 +19,7 @@
 
 void wait_KBC_ready(void)
 {
-    for(;io_in8(0x64) & 0x02 != 0;){
+    for(;(io_in8(0x64) & 0x02) != 0;){
        break;
     }
     return;
@@ -33,3 +33,4 @@ void keyboard_init(void)
     io_out8(0x60,0x47);
     return;
 }
+
