@@ -97,6 +97,18 @@ void draw_rectangle(uint8_t color, int begin_x, int begin_y, int length_x, int l
 	return;
 }
 
+
+/**
+  * @brief  根据指定的数据，绘制图形
+  *
+  * @param[in] begin_x，开始的x坐标
+  * @param[in] begin_y，开始的y坐标
+  * @param[in] length_x，x轴的长度
+  * @param[in] length_y，y轴的长度
+  * @param[in] buf，指定数据的内存空间
+  *
+  * @return None
+  */
 void draw_block(int begin_x, int begin_y, int length_x, int length_y, char *buf)
 {
     int x, y;
@@ -108,6 +120,8 @@ void draw_block(int begin_x, int begin_y, int length_x, int length_y, char *buf)
 	}
 	return;
 }
+
+
 /**
   * @brief  桌面初始化
   *

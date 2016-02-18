@@ -17,6 +17,12 @@
 #include <miniOS/keyboard.h>
 #include <asm/io.h>
 
+/**
+  * @brief  等待键盘控制器响应
+  *
+  * @param None
+  * @return None
+  */
 void wait_KBC_ready(void)
 {
     for(;(io_in8(0x64) & 0x02) != 0;){
@@ -25,6 +31,13 @@ void wait_KBC_ready(void)
     return;
 }
 
+
+/**
+  * @brief  键盘初始化
+  *
+  * @param None
+  * @return None
+  */
 void keyboard_init(void)
 {
     wait_KBC_ready();
