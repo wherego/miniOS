@@ -18,7 +18,6 @@ void HariMain(void)
 	int mouse_x,mouse_y;
 	int i;
     char s[40],key_int_buf[32],mouse_int_buf[128];
-    uint8_t mouse_data_buf[3],mouse_pyase;
     
     
 	////////////////////////////////////////////////////////////
@@ -48,7 +47,7 @@ void HariMain(void)
 	mouse_x = (bootInfo->scrnx - 16)/2;
 	mouse_y = (bootInfo->scrny - 16)/2;
 	mouse_cursor_init((char *)mouse_cursor_buf,COL8_008484);
-    draw_block(mouse_x, mouse_y, 16, 16, mouse_cursor_buf);
+    draw_block(mouse_x, mouse_y, 16, 16, (char *)mouse_cursor_buf);
     sprintf(s,"(%4d,%4d)", mouse_x,mouse_y);
     print_string(0, 0, COL8_FFFFFF, s);
     
@@ -66,7 +65,7 @@ void HariMain(void)
         }
         else{
             if(is_empty(&key_queue) == 1){
-                circular_queue_pop(&key_queue,&i);
+                circular_queue_pop(&key_queue,(char *)&i);
             
                 io_sti();
             
@@ -75,7 +74,7 @@ void HariMain(void)
                 print_string(0, 16, COL8_FFFFFF, s);
             }
             else if(is_empty(&mouse_queue) == 1){
-                circular_queue_pop(&mouse_queue,&i);
+                circular_queue_pop(&mouse_queue,(char *)&i);
             
                 io_sti();
                 
@@ -107,7 +106,7 @@ void HariMain(void)
                     sprintf(s,"(%4d,%4d)", mouse_x,mouse_y);
                     draw_rectangle(COL8_008484, 0, 0, 16*10, 16);
                     print_string(0, 0, COL8_FFFFFF, s);
-                    draw_block(mouse_x, mouse_y, 16, 16, mouse_cursor_buf);
+                    draw_block(mouse_x, mouse_y, 16, 16, (char *)mouse_cursor_buf);
                 }
                
             }
