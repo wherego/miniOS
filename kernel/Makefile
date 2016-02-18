@@ -19,72 +19,34 @@ EDIMG 		= $(TOOLPATH)edimg.exe
 COPY		= copy
 DEL			= del
 
-
-
-################################################################
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#一般规则
+#keyboard.c keyboard.h
+#base.c base.h
+#dsctbl.c dsctbl.h
+#int.c int.h
+#
 #io.nas	
-io.obj: io.nas
-	$(NASK) io.nas io.obj io.lst
-	
-################################################################
 #kernel.nas	
-asm.obj: asm.nas
-	$(NASK) asm.nas asm.obj asm.lst	
+%.gas: %.c
+	$(CC1) -o $*.gas $*.c
 	
-################################################################
+%.nas: %.gas
+	$(GAS2NASK) $*.gas $*.nas	
+
+%.obj: %.nas
+	$(NASK) $*.nas $*.obj $*.lst	
+
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#普通规则
 #font.txt
 font.bin: font.txt
 	$(MAKEFONT) font.txt font.bin
 	
 font.obj: font.bin
 	$(BIN2OBJ) font.bin font.obj _font
-	
 
-################################################################
-#keyboard.c keyboard.h
-keyboard.gas: keyboard.c
-	$(CC1) -o keyboard.gas keyboard.c
 
-keyboard.nas: keyboard.gas 
-	$(GAS2NASK) keyboard.gas keyboard.nas
-
-keyboard.obj: keyboard.nas
-	$(NASK) keyboard.nas keyboard.obj keyboard.lst
-    
-################################################################
-#base.c base.h
-base.gas: base.c
-	$(CC1) -o base.gas base.c
-
-base.nas: base.gas 
-	$(GAS2NASK) base.gas base.nas
-
-base.obj: base.nas
-	$(NASK) base.nas base.obj base.lst
-    
-    
-################################################################
-#dsctbl.c dsctbl.h
-dsctbl.gas: dsctbl.c
-	$(CC1) -o dsctbl.gas dsctbl.c
-
-dsctbl.nas: dsctbl.gas 
-	$(GAS2NASK) dsctbl.gas dsctbl.nas
-
-dsctbl.obj: dsctbl.nas
-	$(NASK) dsctbl.nas dsctbl.obj dsctbl.lst
-
-################################################################
-#int.c int.h
-int.gas: int.c 
-	$(CC1) -o int.gas int.c
-
-int.nas: int.gas
-	$(GAS2NASK) int.gas int.nas
-
-int.obj: int.nas
-	$(NASK) int.nas int.obj int.lst
-	
 	
 clear:
 	-$(DEL) *.bin
