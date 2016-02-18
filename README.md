@@ -6,12 +6,12 @@
 * 深入理解计算机操作系统以及相关知识。<br>
  
 
-#miniOS特性
+#特性
 * GUI
 * 多任务
 * ...
 
-#miniOS目录结构
+#目录结构
     miniOS
     |-- boot
     |   |-- bootsector.nas
