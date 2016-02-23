@@ -19,6 +19,7 @@ fdimage0.bin
 !io.nas
 !asm.nas
 !page.nas
+!miniOS_GUI.png
 
 #希望这些后缀的文件上传
 !*.exe
