@@ -63,6 +63,7 @@
 * `'make run'`，编译生成镜像文件，并且在'qemu.exe'虚拟机上运行，该软件在`/z_tools/qemu/`目录下。
 * `'make clear'`,清理编译连接过程中的中间文件，最终生成的镜像文件也会删除。
  
+###虚拟机运行结果
 ![miniOS_GUI](https://github.com/ffiirree/miniOS/blob/master/miniOS_GUI.png) 
 
 #更新日志
