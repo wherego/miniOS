@@ -62,6 +62,20 @@ kernel/int.obj:
 	$(MAKE) int.obj -C kernel
 	
 #################################################################
+#mm memory.c
+mm/memory.gas: mm/memory.c
+	$(CC1) -o mm/memory.gas mm/memory.c
+	
+mm/memory.nas: mm/memory.gas
+	$(GAS2NASK) mm/memory.gas mm/memory.nas
+
+mm/memory.obj: mm/memory.nas
+	$(NASK) mm/memory.nas mm/memory.obj mm/memory.lst
+	
+mm/page.obj: mm/page.nas
+	$(NASK) mm/page.nas mm/page.obj mm/page.lst
+	
+#################################################################
 #window
 GUI/window.obj:	
 	$(MAKE) window.obj -C GUI
@@ -73,11 +87,13 @@ GUI/mouse.obj:
 init/main.bim: init/main.obj \
 		kernel/io.obj kernel/asm.obj kernel/font.obj kernel/keyboard.obj \
 		kernel/base.obj kernel/dsctbl.obj kernel/int.obj\
+		mm/memory.obj mm/page.obj \
 		GUI/window.obj GUI/mouse.obj     
 	$(OBJ2BIM) @$(RULEFILE) out:init/main.bim stack:3136k map:init/main.map \
 		init/main.obj \
 		kernel/io.obj kernel/asm.obj kernel/font.obj kernel/keyboard.obj \
 		kernel/base.obj kernel/dsctbl.obj kernel/int.obj \
+		mm/memory.obj mm/page.obj \
 		GUI/window.obj GUI/mouse.obj     
 # 3MB+64KB=3136KB
 
@@ -112,6 +128,11 @@ clear:
 	$(DEL) z_tools\qemu\fdimage0.bin
 	$(DEL) boot\*.lst
 	$(DEL) boot\*.bin
+	$(DEL) mm\*.obj
+	$(DEL) mm\*.lst
+	$(DEL) mm\memory.gas
+	$(DEL) mm\memory.nas
+	$(DEL) mm\page.gas
 	$(DEL) init\main.bim
 	$(DEL) init\main.gas
 	$(DEL) init\main.lst

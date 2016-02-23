@@ -10,12 +10,22 @@
 [BITS 32]							; 制作32位模式用的机械语言
 [FILE "asm.nas"]					; 源文件名信息
 
+		global _load_cr0,_store_cr0
 		global _asm_inthandler21,_asm_inthandler2c,_asm_inthandler27
         
         extern _inthandler21,_inthandler2c,_inthandler27
 
 ; 以下是实际的函数
 [SECTION .text]						; 目标文件中写了这些之后再写程序
+
+_load_cr0:
+		mov eax,cr0
+		ret
+		
+_store_cr0:
+		mov eax,[esp+4]
+		mov cr0,eax
+		ret
 
 
 _asm_inthandler21:

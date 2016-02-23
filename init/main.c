@@ -5,6 +5,7 @@
 #include <miniOS/int.h>
 #include <miniOS/keyboard.h>
 #include "stdio.h"
+#include <miniOS/memory.h>
 
 
 Circular_Queue key_queue;
@@ -51,6 +52,9 @@ void HariMain(void)
     sprintf(s,"(%4d,%4d)", mouse_x,mouse_y);
     print_string(0, 0, COL8_FFFFFF, s);
     mouse_enable(&mouse_dsc);
+    
+    sprintf(s,"memory: %dMB", memtest(0x00400000,0xbfffffff)/(1024*1024));
+    print_string(0, 32, COL8_FFFFFF, s);
 
     ////////////////////////////////////////////////////////////
 	for (;;) {
