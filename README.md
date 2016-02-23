@@ -11,49 +11,6 @@
 * 多任务
 * ...
 
-#目录结构
-    miniOS
-    |-- boot
-    |   |-- bootsector.nas
-    |   `-- head.nas
-    |-- fs
-    |-- include
-    |   |-- asm
-    |   |   `-- io.h
-    |   |-- miniOS
-    |   |   |-- base.h
-    |   |   |-- dsctbl.h
-    |   |   |-- int.h
-    |   |   |-- keyboard.h
-    |   |   `-- window.h
-    |   |-- sys
-    |   |-- miniOS.rul
-    |   |-- stdio.h
-    |   |-- stdint.h
-    |   `-- stdarg.h
-    |-- init
-    |   `-- main.c
-    |-- kernel
-    |   |-- io.nas
-    |   |-- asm.nas
-    |   |-- font.txt
-    |   |-- keyboard.c
-    |   |-- base.c
-    |   |-- int.c
-    |   |-- dsctbl.c
-    |   `-- Makefile
-    |-- lib
-    |   |-- golibc.lib
-    |   `-- harilibc.lib
-    |-- GUI
-    |   |-- mouse.c
-    |   |-- window.c
-    |   `-- Makefile
-    |-- z_tools
-    |-- Makefile
-    |-- GPL
-    `-- LGPL
-
 #下载和使用
 目前miniOS的的开发平台是windows平台，没有使用集成开发环境，大部分开发工具来源于《30自制操作系统》，均改自一些开源软件，可以根据需求和开源协议使用，另外自己只需要提供一个代码编辑器即可，（如果没有合适的，推荐notepad++、visual studio code）。<br>
 下载后，不需要安装，找到根目录下的`make.bat`文件，双击运行，在cmd下控制运行，常用的指令为：<br>
@@ -70,3 +27,4 @@
 * 2016-02-11 GDT/IDT 初始化完成
 * 2016-02-15 PIC初始化
 * 2016-02-17 键盘和鼠标中断消息处理
+* 2016-02-23 内存管理
