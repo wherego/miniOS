@@ -45,7 +45,7 @@
     |-- lib
     |   |-- golibc.lib
     |   `-- harilibc.lib
-    |-- window
+    |-- GUI
     |   |-- mouse.c
     |   |-- window.c
     |   `-- Makefile
