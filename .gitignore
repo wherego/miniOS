@@ -18,6 +18,7 @@ fdimage0.bin
 !head.nas
 !io.nas
 !asm.nas
+!page.nas
 
 #希望这些后缀的文件上传
 !*.exe
