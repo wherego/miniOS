@@ -63,22 +63,22 @@ kernel/int.obj:
 	
 #################################################################
 #window
-window/window.obj:	
-	$(MAKE) window.obj -C window
+GUI/window.obj:	
+	$(MAKE) window.obj -C GUI
 
-window/mouse.obj:	
-	$(MAKE) mouse.obj -C window  
+GUI/mouse.obj:	
+	$(MAKE) mouse.obj -C GUI  
 
 ################################################################
 init/main.bim: init/main.obj \
 		kernel/io.obj kernel/asm.obj kernel/font.obj kernel/keyboard.obj \
 		kernel/base.obj kernel/dsctbl.obj kernel/int.obj\
-		window/window.obj window/mouse.obj     
+		GUI/window.obj GUI/mouse.obj     
 	$(OBJ2BIM) @$(RULEFILE) out:init/main.bim stack:3136k map:init/main.map \
 		init/main.obj \
 		kernel/io.obj kernel/asm.obj kernel/font.obj kernel/keyboard.obj \
 		kernel/base.obj kernel/dsctbl.obj kernel/int.obj \
-		window/window.obj window/mouse.obj     
+		GUI/window.obj GUI/mouse.obj     
 # 3MB+64KB=3136KB
 
 init/main.hrb: init/main.bim
@@ -120,4 +120,4 @@ clear:
 	$(DEL) init\main.obj
 	$(DEL) init\main.hrb
 	$(MAKE) clear -C kernel
-	$(MAKE) clear -C window
+	$(MAKE) clear -C GUI
