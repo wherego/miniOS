@@ -18,6 +18,8 @@ void HariMain(void)
 	boot_info_t *bootInfo = NULL;
 	int mouse_x,mouse_y;
 	int i;
+    unsigned int memtotal;
+    Memory_structure *memory = (Memory_structure *)0x3c0000;
     char s[40],key_int_buf[32],mouse_int_buf[128];
     
     
@@ -53,7 +55,11 @@ void HariMain(void)
     print_string(0, 0, COL8_FFFFFF, s);
     mouse_enable(&mouse_dsc);
     
-    sprintf(s,"memory: %dMB", memtest(0x00400000,0xbfffffff)/(1024*1024));
+    memtotal = memtest(0x00400000,0xbfffffff);
+    memory_init(memory);
+    mem_free(memory,0x00001000,0x0009e000);
+    mem_free(memory,0x0040000,memtotal-0x0040000);
+    sprintf(s,"memory: %dMB  free: %dKB", memtotal/(1024*1024),memory_total(memory)/1024);
     print_string(0, 32, COL8_FFFFFF, s);
 
     ////////////////////////////////////////////////////////////
