@@ -60,7 +60,13 @@ unsigned int memtest(unsigned int start, unsigned int end)
     return i;
 }
 
-
+/**
+  * @brief  内存初始化
+  *
+  * @param[in] start,开始地址
+  * @param[in] end,结束地址
+  * @return 内存容量
+  */
 void memory_init(Memory_structure *mem)
 {
     mem->frees = 0;
@@ -73,7 +79,7 @@ void memory_init(Memory_structure *mem)
 
 unsigned int memory_total(Memory_structure *mem)
 {
-    unsigned int i,total;
+    unsigned int i,total = 0;
     for(i = 0; i < mem->frees; i++){
         total += mem->free[i].size;
     }
@@ -101,7 +107,7 @@ unsigned int mem_alloc(Memory_structure *mem,unsigned int size)
 }
 
 
-unsigned int mem_free(Memory_structure *mem, unsigned int addr, unsigned int size)
+int mem_free(Memory_structure *mem, unsigned int addr, unsigned int size)
 {
     int i,j;
     
@@ -156,3 +162,23 @@ unsigned int mem_free(Memory_structure *mem, unsigned int addr, unsigned int siz
     mem->lostsize += size;
     return -1;
 }
+
+
+unsigned int mem_alloc_4k(Memory_structure *mem, unsigned int size)
+{
+    unsigned int a;
+    size = (size + 0xff) & 0xffffff00;
+    a = mem_alloc(mem,size);
+    return a;
+}
+
+
+int mem_free_4k(Memory_structure *mem, unsigned int addr, unsigned int size)
+{
+   int i;
+   size = (size + 0xff) & 0xffffff00;
+   i = mem_free(mem,addr,size);
+   return i;
+}
+
+

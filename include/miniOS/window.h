@@ -2,6 +2,7 @@
 #define __WINDOW_H
 
 #include "stdint.h"
+#include <miniOS/memory.h>
 
 
 /* 宏定义------------------------------------------------*/
@@ -28,7 +29,7 @@
 #define COL8_848484		15								/* 15:暗灰		 	*/
 
 
-
+#define MAX_LAYERS      256
 
 /**
   * 保存启动信息的结构体类型
@@ -47,13 +48,24 @@ typedef struct{
     int x,y,btn;
 }Mouse_dsc;
 
+typedef struct{
+    unsigned char *buf;
+    int begin_x, begin_y,  length_x, length_y, inv_col, height, flags;
+}Layers;
+
+typedef struct{
+    int bottom;
+    Layers *layerAddr[MAX_LAYERS];
+    Layers layerInfo[MAX_LAYERS];
+}Layers_tbl;
+
 
 /* 函数声明-----------------------------------------------*/
 void palette_init(void);
 void set_palette(int begin, int end, uint8_t *rgb);
-void draw_rectangle(uint8_t color, int begin_x, int begin_y, int length_x, int length_y);
+void draw_rectangle(unsigned char *vram, uint8_t color, int begin_x, int begin_y, int length_x, int length_y);
 void draw_block(int begin_x, int begin_y, int length_x, int length_y, char *buf);
-void desktop_init(void);
+void desktop_init(unsigned char *vram);
 
 //输出字符和字符串
 void print_char(int x, int y, uint8_t color, int8_t chr);
@@ -64,6 +76,16 @@ void print_string(int x, int y, uint8_t color, int8_t *str);
 void mouse_enable(Mouse_dsc *mouse);
 void mouse_cursor_init(char *mouse_buffer, char background_color);
 uint8_t mouse_decode(Mouse_dsc *mouse, uint8_t data);
+
+/////////////////////////////////////////////////////////
+//图层表
+Layers_tbl *layers_tbl_init(Memory_structure *mem);
+Layers *layer_alloc(Layers_tbl *layTbl);
+void setLayer(Layers *layer, unsigned char *buf, int length_x, int length_y, int inv_col);
+void setLayerHeight(Layers_tbl *layTbl, Layers *layer, int height);
+void layer_refresh(Layers_tbl *layTbl);
+void layer_shift(Layers_tbl *layTbl, Layers *layer, unsigned int begin_x, unsigned int begin_y);
+void layer_free(Layers_tbl *layTbl, Layers *layer);
 
 #endif // !__WINDOW_H
 

@@ -12,7 +12,6 @@
 #include <miniOS/window.h>
 #include <asm/io.h>
 
-
 extern char font[4096];											/* 字体，汉字					*/
 
 /**
@@ -85,13 +84,13 @@ void set_palette(int begin, int end, uint8_t *rgb)
   *
   * @return None
   */
-void draw_rectangle(uint8_t color, int begin_x, int begin_y, int length_x, int length_y)
+void draw_rectangle(unsigned char *vram, uint8_t color, int begin_x, int begin_y, int length_x, int length_y)
 {
 	int x, y;
 
-	for (y = begin_y;y < begin_y + length_y;y++) {
+	for (y = begin_y; y < begin_y + length_y; y++) {
 		for (x = begin_x;x < begin_x + length_x;x++) {
-			VRAM_ADDR[y*SCRNX + x] = color;
+			vram[y*SCRNX + x] = color;
 		}
 	}
 	return;
@@ -128,11 +127,11 @@ void draw_block(int begin_x, int begin_y, int length_x, int length_y, char *buf)
   * @param  None
   * @return None
   */
-void desktop_init(void)
+void desktop_init(unsigned char *vram)
 {
-	draw_rectangle(COL8_008484, 0, 0, SCRNX, SCRNY - 25);
-	draw_rectangle(COL8_C6C6C6, 0, SCRNY - 25, SCRNX, 25);
-	draw_rectangle(COL8_848484, 0, SCRNY - 25, 50, 25);
+	draw_rectangle(vram, COL8_008484, 0, 0, SCRNX, SCRNY - 25);
+	draw_rectangle(vram, COL8_C6C6C6, 0, SCRNY - 25, SCRNX, 25);
+	draw_rectangle(vram, COL8_848484, 0, SCRNY - 25, 50, 25);
 
 	return;
 }
@@ -186,4 +185,175 @@ void print_string(int x, int y, uint8_t color, int8_t *str)
 }
 
 
+/**
+  * @brief  图层表初始化
+  *
+  * @param[in] mem,内存
+  * @return 图层表首地址
+  */
+Layers_tbl *layers_tbl_init(Memory_structure *mem)
+{
+    Layers_tbl *layTbl;
+    int i;
+    
+    layTbl = (Layers_tbl *)mem_alloc_4k(mem,sizeof(Layers_tbl));
+    if(layTbl == 0){
+        return 0;
+    }
+    
+    layTbl->bottom = -1;//没有涂层
+    
+    for(i = 0; i < MAX_LAYERS; i++){
+        layTbl->layerInfo[i].flags = 0;         /* 标记为未使用               */
+    }
+    return layTbl;
+}
 
+
+
+/**
+  * @brief  从图层表中申请图层
+  *
+  * @param[in] layTbl，图层表首地址
+  * @return 图层地址;0 申请失败
+  */
+Layers *layer_alloc(Layers_tbl *layTbl)
+{
+    Layers *layer;
+    int i;
+    for(i = 0; i < MAX_LAYERS; i++){
+        if(layTbl->layerInfo[i].flags == 0){
+            layer = &layTbl->layerInfo[i];
+            layer->flags = 1;
+            layer->height = -1;                     /* 隐藏                   */
+            return layer;
+        }
+    }
+    return 0;
+}
+
+
+/**
+  * @brief  设置图层参数
+  *
+  * @param[in] layTbl，图层表首地址
+  * @return None
+  */
+void setLayer(Layers *layer, unsigned char *buf, int length_x, int length_y, int inv_col)
+{
+    layer->buf = buf;
+    layer->length_x = length_x;
+    layer->length_y = length_y;
+    layer->inv_col = inv_col;
+    return;
+}
+
+
+/**
+  * @brief  设置图层高度
+  *
+  * @param[in] layTbl，图层表首地址
+  * @param[in] layer，需要设置的图层
+  * @param[in] height，图层高度
+  * @return None
+  */
+void setLayerHeight(Layers_tbl *layTbl, Layers *layer, int height)
+{
+    int i,old_hg;
+    old_hg = layer->height;
+    
+    /* 检查设置高度值               */
+    if(height > layTbl->bottom + 1){
+        height = layTbl->bottom+1;
+    }
+    if(height < -1){
+        height = -1;
+    }
+    layer->height = height;
+    
+    
+    //sort
+    if(height < old_hg){     //图层上移
+        if(height >= 0){
+            //将其之前的下移一层
+            for(i = old_hg; i > height; i--){               
+                layTbl->layerAddr[i] = layTbl->layerAddr[i - 1];
+                layTbl->layerAddr[i]->height = i;
+            }
+            layTbl->layerAddr[height] = layer;
+        }
+        else {
+            if(layTbl->bottom > old_hg){
+                //将其之后的上移一层
+                for(i = old_hg; i < layTbl->bottom; i++){
+                    layTbl->layerAddr[i] = layTbl->layerAddr[i + 1];
+                    layTbl->layerAddr[i]->height = i;
+                }
+            }
+            layTbl->bottom--;
+        }
+        layer_refresh(layTbl);
+    }
+    else if(old_hg > height){ //图层下移
+        if(old_hg > 0){
+            for(i = old_hg; i >= height; i++){
+                layTbl->layerAddr[i] = layTbl->layerAddr[i + 1];
+                layTbl->layerAddr[i]->height = i;
+            }
+            layTbl->layerAddr[height] = layer;
+        }
+        else{
+            for(i = layTbl->bottom; i >= height; i--){
+                layTbl->layerAddr[i + 1] = layTbl->layerAddr[i];
+                layTbl->layerAddr[i + 1]->height = i + 1;
+            }
+            layTbl->layerAddr[height] = layer;
+            layTbl->bottom++;
+        }
+        layer_refresh(layTbl);
+    }
+    return;
+}
+
+
+void layer_refresh(Layers_tbl *layTbl)
+{
+    int hg, i,j,x,y;
+    unsigned char *buf,col;
+    Layers *layer;
+    for(hg =0; hg <= layTbl->bottom; hg++){
+        layer = layTbl->layerAddr[hg];
+        buf = layer->buf;
+        
+        for(j = 0; j < layer->length_x;j++){
+            y = layer->begin_y + j;
+            for(i = 0; i < layer->length_x; i++){
+                x = layer->begin_x + i;
+                col = buf[j*layer->length_x + i];
+                if(col != layer->inv_col){
+                    VRAM_ADDR[y*SCRNX + x] = col;
+                }
+            }
+        }
+    }
+    return;
+}
+
+void layer_shift(Layers_tbl *layTbl, Layers *layer, unsigned int begin_x, unsigned int begin_y)
+{
+    layer->begin_x = begin_x;
+    layer->begin_y = begin_y;
+    if(layer >= 0){
+        layer_refresh(layTbl);
+    }
+    return;
+}
+
+void layer_free(Layers_tbl *layTbl, Layers *layer)
+{
+    if(layer->height >= 0){
+        setLayerHeight(layTbl,layer,-1);
+    }
+    layer->flags = 0;
+    return;
+}
